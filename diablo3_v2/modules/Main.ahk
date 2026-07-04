@@ -162,19 +162,20 @@ getBestMatchingStashSlotXYIndex(x_coord, y_coord) {
 }
 
 
-isCoordSlotEmpty(coords) {
+isInventorySlotEmpty(coords) {
     rgb1 := getPixelColorAt(coords[1], coords[2])
     ; Sample another pixel to reduce false positives
     yOffset := (CURRENT_MONITOR_SETTINGS.slotWidth() / 2) - 14
     rgb2 := getPixelColorAt(coords[1], coords[2] - yOffset)
 
-    return isSimilarColor(rgb1, EMPTY_CENTER_STASH_COLOR) and isSimilarColor(rgb2, EMPTY_CENTER_STASH_COLOR)
+    return isSimilarColor(rgb1, EMPTY_CENTER_STASH_COLOR, EMPTY_INVENTORY_SLOT_COLOR_TOLERANCE) 
+        and isSimilarColor(rgb2, EMPTY_CENTER_STASH_COLOR, EMPTY_INVENTORY_SLOT_COLOR_TOLERANCE)
 }
 
 leftClickAtCoord(coords) {
     MouseMove coords[1], coords[2]
     Sleep 55
-    Send "{Click Right}"
+    Click
 }
 
 shiftClickAtCoord(coords) {
@@ -226,7 +227,7 @@ shiftClickStash(x_index_start := 0, y_index_start := 0) {
             }
 
             coords := getStashCenterCoord(x_index, y_index)
-            if (!isCoordSlotEmpty(coords)) {
+            if (!isInventorySlotEmpty(coords)) {
                 shiftClickAtCoord(coords)
             }
             y_index += 1
@@ -256,7 +257,7 @@ shiftClickInventory(x_index_start := 0, y_index_start := 0) {
             }
 
             coords := getInventoryCenterCoord(x_index, y_index)
-            if (!isCoordSlotEmpty(coords)) {
+            if (!isInventorySlotEmpty(coords)) {
                 shiftClickAtCoord(coords)
             }
             y_index += 1

@@ -39,6 +39,10 @@ global EMPTY_CENTER_STASH_COLOR := Color(43, 38, 28)
 ; R G B
 global PIXEL_DIFF_TOLERANCE := 8.8
 
+global EMPTY_INVENTORY_SLOT_COLOR_TOLERANCE := 14.0
+
+global DEBUG_MODE := false
+
 hexToRGB(hexColor) {
     ; Ensure it's a number, not a quoted string
     colorNum := hexColor + 0  ; Coerce string to number if needed
@@ -62,6 +66,9 @@ rgbString(rgb) {
 
 isSimilarColor(color1, color2, tolerance := PIXEL_DIFF_TOLERANCE) {
     sqrtDistance := rgbSqrtDistance(color1, color2)
+    if (DEBUG_MODE) {
+        MsgBox "Comparing colors: " rgbString(color1) " and " rgbString(color2) ", sqrtDistance: " sqrtDistance ", tolerance: " tolerance
+    }
     return sqrtDistance <= tolerance
 }
 

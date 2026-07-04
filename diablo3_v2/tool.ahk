@@ -5,7 +5,7 @@
 #Include "modules\Blacksmith.ahk"
 
 
-leftClickInventory(x_index_start := 0, y_index_start := 0) {
+leftClickInventoryForSalvage(x_index_start := 0, y_index_start := 0) {
     is_initial_run := true
     x_index := x_index_start
     outer:
@@ -24,8 +24,13 @@ leftClickInventory(x_index_start := 0, y_index_start := 0) {
             }
 
             coords := getInventoryCenterCoord(x_index, y_index)
-            if (!isCoordSlotEmpty(coords)) {
+            if (!isInventorySlotEmpty(coords)) {
                 leftClickAtCoord(coords)
+                Sleep 70
+                if (BlacksmithIsWarningPanelOpen()) {
+                    Send "{Enter}"
+                    Sleep 70
+                }
             }
             y_index += 1
         }
@@ -35,18 +40,35 @@ leftClickInventory(x_index_start := 0, y_index_start := 0) {
     moveMouseToCenter()
 }
 
-
 F8::
 {
+    coords := getInventoryCenterCoord(2, 5)
+    MsgBox("isInventorySlotEmpty: " . isInventorySlotEmpty(coords))
+}
+
+F9::
+{
     ; coords := getInventoryCenterCoord(0, 0)
-    ; MsgBox("isCoordSlotEmpty: " . isCoordSlotEmpty(coords))
+    ; MsgBox("isInventorySlotEmpty: " . isInventorySlotEmpty(coords))
     ; MouseMove coords[1], coords[2]
 
     ; MsgBox("BlacksmithIsPanelActive: " . BlacksmithIsPanelActive())
 
     if (BlacksmithIsPanelActive()) {
         BlacksmithClickSalvageButton()
-        leftClickInventory()
+        leftClickInventoryForSalvage()
+        ; coords := getInventoryCenterCoord(0, 0)
+        ; if (!isInventorySlotEmpty(coords)) {
+        ;     leftClickAtCoord(coords)
+        ;     Sleep 125
+        ;     if (BlacksmithIsWarningPanelOpen()) {
+        ;         ; MsgBox("Warning panel is open after clicking salvage button. Sending Enter key to confirm salvage.")
+        ;         Send "{Enter}"
+        ;         Sleep 125
+        ;     } else {
+        ;         MsgBox("Warning panel is not open after clicking salvage button.")
+        ;     }
+        ; }
     } else {
         MsgBox("Blacksmith panel is not active.")
     }
@@ -80,18 +102,12 @@ F8::
     ; MsgBox "Got color: " . color . ", r: " . rgb[1] . ", g: " . rgb[2] . ", b: " . rgb[3] . ", sqrtDistance: " . sqrtDistance . ", isCoordSlotEmptyV: " . isCoordSlotEmptyV
 }
 
-F9::
-{
-    ; curr_mouse_coords := currentMouseCoords()
-    ; xy_index := getBestMatchingStashSlotXYIndex(curr_mouse_coords[1], curr_mouse_coords[2])
-    ; if (xy_index[1] != -1) {
-    ;     shiftClickStash(xy_index[1], xy_index[2])
-    ; }
-}
-
 F10::
 {
-    shiftClickStash()
+    Loop 30 {
+        Click "Right"
+        Sleep 50
+    }
 }
 
 F11::
